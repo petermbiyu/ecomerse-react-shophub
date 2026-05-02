@@ -9,10 +9,10 @@ export const Navbar = () => {
       </div>
       <div className="auth">
         <div>
-          <Link to={"/auth"} className="login">
+          <Link to={"/auth"} className="btn-pri">
             Log In
           </Link>
-          <Link to={"/auth"} className="signin">
+          <Link to={"/auth"} className="btn-sec">
             Sign Up
           </Link>
         </div>
