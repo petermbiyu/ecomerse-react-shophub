@@ -138,6 +138,37 @@ h3 {
   gap: 10px;
 }
 
+/* signup */
+.container {
+  width: 100%;
+  margin-top: 4rem;
+}
+.auth-container {
+  width: 480px;
+  background: #fff;
+  margin: 0 auto;
+  padding: 10px;
+}
+.auth-container h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.data-form div {
+  margin-bottom: 1rem;
+}
+.data-form div .input {
+  width: 100%;
+  padding: 6px 12px;
+  border: 1px solid gray;
+}
+.data-form div .input:focus {
+  outline: none;
+}
+.mode-link {
+  color: rgb(94, 169, 255);
+  font-weight: 700;
+  cursor: pointer;
+}
 /* footer */
 .footer {
   border-top: 2px solid black;
