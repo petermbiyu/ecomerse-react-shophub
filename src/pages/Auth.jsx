@@ -1,20 +1,37 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export const Auth = () => {
   const [mode, setMode] = useState("signup");
+  const [message, setMessage] = useState(null);
+  const [err, setErr] = useState(null);
+
+  const navigate = useNavigate();
+
+  const { signup, login, logout, user } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const onFormSubmit = (data) => {
-    {
-      mode === "signup"
-        ? alert(
-            `name: ${data.name}, email: ${data.email}, password: ${data.password}`,
-          )
-        : alert(`email: ${data.email}, password: ${data.password}`);
+    let result;
+    setMessage(null);
+    setErr(null);
+    if (mode === "signup") {
+      result = signup(data.name, data.email, data.password);
+    } else if (mode === "login") {
+      result = login(data.email, data.password);
+    }
+    if (result.success) {
+      setMessage(result.message);
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } else {
+      setErr(result.message);
     }
   };
   return (
@@ -22,6 +39,20 @@ export const Auth = () => {
       <div className="container">
         <div className="auth-container">
           <h1>{mode === "signup" ? "Sign Up" : "Log In"}</h1>
+          {user && <p>Logged in as {user.name}</p>}
+          <button
+            onClick={() => {
+              logout();
+              setErr(null);
+              setMessage(null);
+            }}
+          >
+            Logout
+          </button>
+          {message && (
+            <p style={{ background: "green", color: "white" }}>{message}</p>
+          )}
+          {err && <p style={{ background: "red", color: "white" }}>{err}</p>}
           <form className="data-form" onSubmit={handleSubmit(onFormSubmit)}>
             {mode === "signup" && (
               <div>
