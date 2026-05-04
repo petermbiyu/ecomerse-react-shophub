@@ -1,16 +1,15 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { AuthContext } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export const Auth = () => {
   const [mode, setMode] = useState("signup");
-  const [message, setMessage] = useState(null);
   const [err, setErr] = useState(null);
 
   const navigate = useNavigate();
 
-  const { signup, login, logout, user } = useContext(AuthContext);
+  const { signup, login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -18,7 +17,6 @@ export const Auth = () => {
   } = useForm();
   const onFormSubmit = (data) => {
     let result;
-    setMessage(null);
     setErr(null);
     if (mode === "signup") {
       result = signup(data.name, data.email, data.password);
@@ -26,10 +24,7 @@ export const Auth = () => {
       result = login(data.email, data.password);
     }
     if (result.success) {
-      setMessage(result.message);
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      navigate("/");
     } else {
       setErr(result.message);
     }
@@ -39,19 +34,6 @@ export const Auth = () => {
       <div className="container">
         <div className="auth-container">
           <h1>{mode === "signup" ? "Sign Up" : "Log In"}</h1>
-          {user && <p>Logged in as {user.name}</p>}
-          <button
-            onClick={() => {
-              logout();
-              setErr(null);
-              setMessage(null);
-            }}
-          >
-            Logout
-          </button>
-          {message && (
-            <p style={{ background: "green", color: "white" }}>{message}</p>
-          )}
           {err && <p style={{ background: "red", color: "white" }}>{err}</p>}
           <form className="data-form" onSubmit={handleSubmit(onFormSubmit)}>
             {mode === "signup" && (
