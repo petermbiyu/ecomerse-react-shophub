@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { getProductById } from "../data/products";
 import { useNavigate, useParams } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 export const Products = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
   useEffect(() => {
     const foundProduct = getProductById(id);
     if (!foundProduct) {
@@ -27,6 +29,10 @@ export const Products = () => {
     );
   }
 
+  const { cartItems, addToCart } = useCart();
+  const productCart = cartItems.find((item) => item.id === product.id);
+  const quantityLabel = productCart ? `${productCart.quantity}` : "";
+
   return (
     <div className="section">
       <div className="products">
@@ -38,7 +44,9 @@ export const Products = () => {
             <h1>{product.name}</h1>
             <p className="price">Ksh. {product.price}</p>
             <p>{product.description}</p>
-            <button className="btn-sec">Add to Cart</button>
+            <button className="btn-sec" onClick={() => addToCart(product.id)}>
+              Cart {quantityLabel}
+            </button>
           </div>
         </div>
       </div>
