@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import { getProductById } from "../data/products";
 
 const CartContext = createContext(null);
 
@@ -18,8 +19,45 @@ export const CartProvider = ({ children }) => {
     }
   }
 
+  function getCartItemsWithProducts() {
+    return cartItems
+      .map((item) => ({ ...item, product: getProductById(item.id) }))
+      .filter((item) => item.product);
+  }
+  function removeItem(productId) {
+    setCartItems(cartItems.filter((item) => item.id !== productId));
+  }
+
+  function updateQuantity(productId, quantity) {
+    if (quantity <= 0) {
+      removeItem(productId);
+      return;
+    }
+    setCartItems(
+      cartItems.map((item) =>
+        item.id === productId ? { ...item, quantity } : item,
+      ),
+    );
+  }
+  function getCartTotal() {
+    const total = cartItems.reduce((total, item) => {
+      const product = getProductById(item.id);
+      return total + (product ? product.price * item.quantity : 0);
+    }, 0);
+    return total;
+  }
+
   return (
-    <CartContext.Provider value={{ cartItems, addToCart }}>
+    <CartContext.Provider
+      value={{
+        cartItems,
+        addToCart,
+        getCartItemsWithProducts,
+        updateQuantity,
+        removeItem,
+        getCartTotal,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

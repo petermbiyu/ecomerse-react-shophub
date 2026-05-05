@@ -31,7 +31,7 @@ export const Products = () => {
 
   const { cartItems, addToCart } = useCart();
   const productCart = cartItems.find((item) => item.id === product.id);
-  const quantityLabel = productCart ? `${productCart.quantity}` : "";
+  const quantityLabel = productCart ? `(${productCart.quantity})` : "";
 
   return (
     <div className="section">
